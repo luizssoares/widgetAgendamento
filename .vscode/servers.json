@@ -1,0 +1,17 @@
+{
+	"version": "1.0.0",
+	"configurations": [
+		{
+			"id": "rnuh9febitlxuk7icbhuwoianmhl",
+			"name": "Homologacao",
+			"host": "mywebhm.am.sebrae.com.br",
+			"ssl": true,
+			"port": 443,
+			"username": "atic.10",
+			"password": "eyJpdiI6IjdjNTc2Nzc2ZTg5NzVlZDc2Nzg3ZDZlZmNhOTRhM2Q5Iiwic2FsdCI6ImIwMjlhYTA3MTMyNGI4NzNjZTlmMjRlNTAxMjRmYmRkIiwidGV4dCI6ImY3NjYwZDU5NGExNTBjNWM5ZmRkOTBhYTExYWRhMjNkIn0=",
+			"userCode": "20000835",
+			"confirmExporting": false,
+			"companyId": 1
+		}
+	]
+}
