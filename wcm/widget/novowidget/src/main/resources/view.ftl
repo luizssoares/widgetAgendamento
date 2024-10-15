@@ -1,566 +1,1562 @@
 <html>
-<head>
-	<link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
-    <link type="text/css" rel="stylesheet" href=".."/>
-	<script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
-	<script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
-	<script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
-	<script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>		
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/datepicker-pt-BR.min.js"></script>
+    <script src='https://fullcalendar.io/js/fullcalendar-3.1.0/locale/pt-br.js'></script>
 
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!------ Include the above in your HEAD tag ---------->
-
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
-    <script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-</head>
-<body>
-<div class="fluig-style-guide">
-<form name="form" role="form">
-												
-
-<div class="container theme-showcase" style="margin: 0px">
-  <h1 style="text-align: center;">Agendamentos <i class="flaticon flaticon-calendar icon-lg" aria-hidden="true"></i></h1>
-<div id="holder" class="row" ></div>
-</div>
-
-
-<script type="text/tmpl" id="tmpl">
-  {{ 
-  var date = date || new Date(),
-      month = date.getMonth(), 
-      year = date.getFullYear(), 
-      first = new Date(year, month, 1), 
-      last = new Date(year, month + 1, 0),
-      startingDay = first.getDay(), 
-      thedate = new Date(year, month, 1 - startingDay),
-      dayclass = lastmonthcss,
-      today = new Date(),
-      i, j; 
-  if (mode === 'week') {
-    thedate = new Date(date);
-    thedate.setDate(date.getDate() - date.getDay());
-    first = new Date(thedate);
-    last = new Date(thedate);
-    last.setDate(last.getDate()+6);
-  } else if (mode === 'day') {
-    thedate = new Date(date);
-    first = new Date(thedate);
-    last = new Date(thedate);
-    last.setDate(thedate.getDate() + 1);
-  }
-  
-  }}
-  <table class="calendar-table table table-condensed table-tight">
-    <thead>
-      <tr>
-        <td colspan="7" style="text-align: center">
-          <table style="white-space: nowrap; width: 100%">
-            <tr>
-              <td style="text-align: left;">
-                <span class="btn-group">
-                  <button class="js-cal-prev btn btn-default"><</button>
-                  <button class="js-cal-next btn btn-default">></button>
-                </span>
-                <button class="js-cal-option btn btn-default {{: first.toDateInt() <= today.toDateInt() && today.toDateInt() <= last.toDateInt() ? 'active':'' }}" data-date="{{: today.toISOString()}}" data-mode="month">{{: todayname }}</button>
-              </td>
-              <td>
-                <span class="btn-group btn-group-lg">
-                  {{ if (mode !== 'day') { }}
-                    {{ if (mode === 'month') { }}<button class="js-cal-option btn btn-link" data-mode="year">{{: months[month] }}</button>{{ } }}
-                    {{ if (mode ==='week') { }}
-                      <button class="btn btn-link disabled">{{: shortMonths[first.getMonth()] }} {{: first.getDate() }} - {{: shortMonths[last.getMonth()] }} {{: last.getDate() }}</button>
-                    {{ } }}
-                    <button class="js-cal-years btn btn-link">{{: year}}</button> 
-                  {{ } else { }}
-                    <button class="btn btn-link disabled">{{: date.toDateString() }}</button> 
-                  {{ } }}
-                </span>
-              </td>
-              <td style="text-align: right">
-                <span class="btn-group">
-                  <button class="js-cal-option btn btn-default {{: mode==='year'? 'active':'' }}" data-mode="year">Ano</button>
-                  <button class="js-cal-option btn btn-default {{: mode==='month'? 'active':'' }}" data-mode="month">Mes</button>
-                  <button class="js-cal-option btn btn-default {{: mode==='week'? 'active':'' }}" data-mode="week">Semana</button>
-                  <button class="js-cal-option btn btn-default {{: mode==='day'? 'active':'' }}" data-mode="day">Dia</button>
-                </span>
-              </td>
-            </tr>
-          </table>
-          
-        </td>
-      </tr>
-    </thead>
-    {{ if (mode ==='year') {
-      month = 0;
-    }}
-    <tbody>
-      {{ for (j = 0; j < 3; j++) { }}
-      <tr>
-        {{ for (i = 0; i < 4; i++) { }}
-        <td class="calendar-month month-{{:month}} js-cal-option" data-date="{{: new Date(year, month, 1).toISOString() }}" data-mode="month">
-          {{: months[month] }}
-          {{ month++;}}
-        </td>
-        {{ } }}
-      </tr>
-      {{ } }}
-    </tbody>
-    {{ } }}
-    {{ if (mode ==='month' || mode ==='week') { }}
-    <thead>
-      <tr class="c-weeks">
-        {{ for (i = 0; i < 7; i++) { }}
-          <th class="c-name">
-            {{: days[i] }}
-          </th>
-        {{ } }}
-      </tr>
-    </thead>
-    <tbody>
-      {{ for (j = 0; j < 6 && (j < 1 || mode === 'month'); j++) { }}
-      <tr>
-        {{ for (i = 0; i < 7; i++) { }}
-        {{ if (thedate > last) { dayclass = nextmonthcss; } else if (thedate >= first) { dayclass = thismonthcss; } }}
-        <td class="calendar-day {{: dayclass }} {{: thedate.toDateCssClass() }} {{: date.toDateCssClass() === thedate.toDateCssClass() ? 'selected':'' }} {{: daycss[i] }} js-cal-option" data-date="{{: thedate.toISOString() }}">
-          <div class="date">{{: thedate.getDate() }}</div>
-          {{ thedate.setDate(thedate.getDate() + 1);}}
-        </td>
-        {{ } }}
-      </tr>
-      {{ } }}
-    </tbody>
-    {{ } }}
-    {{ if (mode ==='day') { }}
-    <tbody>
-      <tr>
-        <td colspan="7">
-          <table class="table table-striped table-condensed table-tight-vert" >
-            <thead>
-              <tr>
-                <th> </th>
-                <th style="text-align: center; width: 100%">{{: days[date.getDay()] }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th class="timetitle" >All Day</th>
-                <td class="{{: date.toDateCssClass() }}">  </td>
-              </tr>
-              <tr>
-                <th class="timetitle" >Before 6 AM</th>
-                <td class="time-0-0"> </td>
-              </tr>
-              {{for (i = 6; i < 22; i++) { }}
-              <tr>
-                <th class="timetitle" >{{: i <= 12 ? i : i - 12 }} {{: i < 12 ? "AM" : "PM"}}</th>
-                <td class="time-{{: i}}-0"> </td>
-              </tr>
-              <tr>
-                <th class="timetitle" >{{: i <= 12 ? i : i - 12 }}:30 {{: i < 12 ? "AM" : "PM"}}</th>
-                <td class="time-{{: i}}-30"> </td>
-              </tr>
-              {{ } }}
-              <tr>
-                <th class="timetitle" >After 10 PM</th>
-                <td class="time-22-0"> </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-    {{ } }}
-  </table>
-</script>
-
-
-<script>
-    var $currentPopover = null;
-  $(document).on('shown.bs.popover', function (ev) {
-    var $target = $(ev.target);
-    if ($currentPopover && ($currentPopover.get(0) != $target.get(0))) {
-      $currentPopover.popover('toggle');
-    }
-    $currentPopover = $target;
-  }).on('hidden.bs.popover', function (ev) {
-    var $target = $(ev.target);
-    if ($currentPopover && ($currentPopover.get(0) == $target.get(0))) {
-      $currentPopover = null;
-    }
-  });
-
-
-//quicktmpl is a simple template language I threw together a while ago; it is not remotely secure to xss and probably has plenty of bugs that I haven't considered, but it basically works
-//the design is a function I read in a blog post by John Resig (http://ejohn.org/blog/javascript-micro-templating/) and it is intended to be loosely translateable to a more comprehensive template language like mustache easily
-$.extend({
-    quicktmpl: function (template) {return new Function("obj","var p=[],print=function(){p.push.apply(p,arguments);};with(obj){p.push('"+template.replace(/[\r\t\n]/g," ").split("{{").join("\t").replace(/((^|\}\})[^\t]*)'/g,"$1\r").replace(/\t:(.*?)\}\}/g,"',$1,'").split("\t").join("');").split("}}").join("p.push('").split("\r").join("\\'")+"');}return p.join('');")}
-});
-
-$.extend(Date.prototype, {
-  //provides a string that is _year_month_day, intended to be widely usable as a css class
-  toDateCssClass:  function () { 
-    return '_' + this.getFullYear() + '_' + (this.getMonth() + 1) + '_' + this.getDate(); 
-  },
-  //this generates a number useful for comparing two dates; 
-  toDateInt: function () { 
-    return ((this.getFullYear()*12) + this.getMonth())*32 + this.getDate(); 
-  },
-  toTimeString: function() {
-    var hours = this.getHours(),
-        minutes = this.getMinutes(),
-        hour = (hours > 12) ? (hours - 12) : hours,
-        ampm = (hours >= 12) ? ' pm' : ' am';
-    if (hours === 0 && minutes===0) { return ''; }
-    if (minutes > 0) {
-      return hour + ':' + minutes + ampm;
-    }
-    return hour + ampm;
-  }
-});
-
-
-(function ($) {
-
-  //t here is a function which gets passed an options object and returns a string of html. I am using quicktmpl to create it based on the template located over in the html block
-  var t = $.quicktmpl($('#tmpl').get(0).innerHTML);
-  
-  function calendar($el, options) {
-    //actions aren't currently in the template, but could be added easily...
-    $el.on('click', '.js-cal-prev', function () {
-      switch(options.mode) {
-      case 'year': options.date.setFullYear(options.date.getFullYear() - 1); break;
-      case 'month': options.date.setMonth(options.date.getMonth() - 1); break;
-      case 'week': options.date.setDate(options.date.getDate() - 7); break;
-      case 'day':  options.date.setDate(options.date.getDate() - 1); break;
-      }
-      draw();
-    }).on('click', '.js-cal-next', function () {
-      switch(options.mode) {
-      case 'year': options.date.setFullYear(options.date.getFullYear() + 1); break;
-      case 'month': options.date.setMonth(options.date.getMonth() + 1); break;
-      case 'week': options.date.setDate(options.date.getDate() + 7); break;
-      case 'day':  options.date.setDate(options.date.getDate() + 1); break;
-      }
-      draw();
-    }).on('click', '.js-cal-option', function () {
-      var $t = $(this), o = $t.data();
-      if (o.date) { o.date = new Date(o.date); }
-      $.extend(options, o);
-      draw();
-    }).on('click', '.js-cal-years', function () {
-      var $t = $(this), 
-          haspop = $t.data('popover'),
-          s = '', 
-          y = options.date.getFullYear() - 2, 
-          l = y + 5;
-      if (haspop) { return true; }
-      for (; y < l; y++) {
-        s += '<button type="button" class="btn btn-default btn-lg btn-block js-cal-option" data-date="' + (new Date(y, 1, 1)).toISOString() + '" data-mode="year">'+y + '</button>';
-      }
-      $t.popover({content: s, html: true, placement: 'auto top'}).popover('toggle');
-      return false;
-    }).on('click', '.event', function () {
-      var $t = $(this), 
-          index = +($t.attr('data-index')), 
-          haspop = $t.data('popover'),
-          data, time;
-          
-      if (haspop || isNaN(index)) { return true; }
-      data = options.data[index];
-      time = data.start.toTimeString();
-      if (time && data.end) { time = time + ' - ' + data.end.toTimeString(); }
-      $t.data('popover',true);
-      $t.popover({content: '<p><strong>' + time + '</strong></p>'+data.text, html: true, placement: 'auto left'}).popover('toggle');
-      return false;
-    });
-    function dayAddEvent(index, event) {
-      if (!!event.allDay) {
-        monthAddEvent(index, event);
-        return;
-      }
-      var $event = $('<div/>', {'class': 'event', text: event.title, title: event.title, 'data-index': index}),
-          start = event.start,
-          end = event.end || start,
-          time = event.start.toTimeString(),
-          hour = start.getHours(),
-          timeclass = '.time-22-0',
-          startint = start.toDateInt(),
-          dateint = options.date.toDateInt(),
-          endint = end.toDateInt();
-      if (startint > dateint || endint < dateint) { return; }
-      
-      if (!!time) {
-        $event.html('<strong>' + time + '</strong> ' + $event.html());
-      }
-      $event.toggleClass('begin', startint === dateint);
-      $event.toggleClass('end', endint === dateint);
-      if (hour < 6) {
-        timeclass = '.time-0-0';
-      }
-      if (hour < 22) {
-        timeclass = '.time-' + hour + '-' + (start.getMinutes() < 30 ? '0' : '30');
-      }
-      $(timeclass).append($event);
-    }
-    
-    function monthAddEvent(index, event) {
-      var $event = $('<div/>', {'class': 'event', text: event.title, title: event.title, 'data-index': index}),
-          e = new Date(event.start),
-          dateclass = e.toDateCssClass(),
-          day = $('.' + e.toDateCssClass()),
-          empty = $('<div/>', {'class':'clear event', html:' '}), 
-          numbevents = 0, 
-          time = event.start.toTimeString(),
-          endday = event.end && $('.' + event.end.toDateCssClass()).length > 0,
-          checkanyway = new Date(e.getFullYear(), e.getMonth(), e.getDate()+40),
-          existing,
-          i;
-      $event.toggleClass('all-day', !!event.allDay);
-      if (!!time) {
-        $event.html('<strong>' + time + '</strong> ' + $event.html());
-      }
-      if (!event.end) {
-        $event.addClass('begin end');
-        $('.' + event.start.toDateCssClass()).append($event);
-        return;
-      }
-            
-      while (e <= event.end && (day.length || endday || options.date < checkanyway)) {
-        if(day.length) { 
-          existing = day.find('.event').length;
-          numbevents = Math.max(numbevents, existing);
-          for(i = 0; i < numbevents - existing; i++) {
-            day.append(empty.clone());
-          }
-          day.append(
-            $event.
-            toggleClass('begin', dateclass === event.start.toDateCssClass()).
-            toggleClass('end', dateclass === event.end.toDateCssClass())
-          );
-          $event = $event.clone();
-          $event.html(' ');
-        }
-        e.setDate(e.getDate() + 1);
-        dateclass = e.toDateCssClass();
-        day = $('.' + dateclass);
-      }
-    }
-    function yearAddEvents(events, year) {
-      var counts = [0,0,0,0,0,0,0,0,0,0,0,0];
-      $.each(events, function (i, v) {
-        if (v.start.getFullYear() === year) {
-            counts[v.start.getMonth()]++;
-        }
+    <script src="fullcalendar/fullcalendar.js"></script>
+    <script src="./fullcalendar/locale/pt-br.js"></script>
+    <script src="fullcalendar/lang-all.js"></script>
+    <script>
+    $(function() {
+    $("#calendar").fullCalendar({
+        lang: ‘pt-br’;
       });
-      $.each(counts, function (i, v) {
-        if (v!==0) {
-            $('.month-'+i).append('<span class="badge">'+v+'</span>');
-        }
-      });
-    }
-    
-    function draw() {
-      $el.html(t(options));
-      //potential optimization (untested), this object could be keyed into a dictionary on the dateclass string; the object would need to be reset and the first entry would have to be made here
-      $('.' + (new Date()).toDateCssClass()).addClass('today');
-      if (options.data && options.data.length) {
-        if (options.mode === 'year') {
-            yearAddEvents(options.data, options.date.getFullYear());
-        } else if (options.mode === 'month' || options.mode === 'week') {
-            $.each(options.data, monthAddEvent);
-        } else {
-            $.each(options.data, dayAddEvent);
-        }
-      }
-    }
-    
-    draw();    
-  }
-  
-  ;(function (defaults, $, window, document) {
-    $.extend({
-      calendar: function (options) {
-        return $.extend(defaults, options);
-      }
-    }).fn.extend({
-      calendar: function (options) {
-        options = $.extend({}, defaults, options);
-        return $(this).each(function () {
-          var $this = $(this);
-          calendar($this, options);
-        });
-      }
     });
-  })({
-    days: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
-    months: ["Janeiro", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-    shortMonths: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
-    date: (new Date()),
-        daycss: ["c-sunday", "", "", "", "", "", "c-saturday"],
-        todayname: "HOJE",
-        thismonthcss: "current",
-        lastmonthcss: "outside",
-        nextmonthcss: "outside",
-    mode: "month",
-    data: []
-  }, jQuery, window, document);
-    
-})(jQuery);
 
-var data = [],
-    date = new Date(),
-    d = date.getDate(),
-    d1 = d,
-    m = date.getMonth(),
-    y = date.getFullYear(),
-    i,
-    end, 
-    j, 
-    c = 1063, 
-    c1 = 3329,
-    h, 
-    m,
-    names = ['All Day Event', 'Long Event', 'Birthday Party', 'Repeating Event', 'Training', 'Meeting', 'Mr. Behnke', 'Date', 'Ms. Tubbs'],
-    slipsum = ["Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. And most times they're friends, like you and me! I should've known way back when... You know why, David? Because of the kids. They called me Mr Glass.", "You see? It's curious. Ted did figure it out - time travel. And when we get back, we gonna tell everyone. How it's possible, how it's done, what the dangers are. But then why fifty years in the future when the spacecraft encounters a black hole does the computer call it an 'unknown entry event'? Why don't they know? If they don't know, that means we never told anyone. And if we never told anyone it means we never made it back. Hence we die down here. Just as a matter of deductive logic.", "Your bones don't break, mine do. That's clear. Your cells react to bacteria and viruses differently than mine. You don't get sick, I do. That's also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We're on the same curve, just on opposite ends.", "Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows. Some pilots get picked and become television programs. Some don't, become nothing. She starred in one of the ones that became nothing.", "Yeah, I like animals better than people sometimes... Especially dogs. Dogs are the best. Every time you come home, they act like they haven't seen you in a year. And the good thing about dogs... is they got different dogs for different people. Like pit bulls. The dog of dogs. Pit bull can be the right man's best friend... or the wrong man's worst enemy. You going to give me a dog for a pet, give me a pit bull. Give me... Raoul. Right, Omar? Give me Raoul.", "Like you, I used to think the world was this great place where everybody lived by the same standards I did, then some kid with a nail showed me I was living in his world, a world where chaos rules not order, a world where righteousness is not rewarded. That's Cesar's world, and if you're not willing to play by his rules, then you're gonna have to pay the price.", "You think water moves fast? You should see ice. It moves like it has a mind. Like it knows it killed the world once and got a taste for murder. After the avalanche, it took us a week to climb out. Now, I don't know exactly when we turned on each other, but I know that seven of us survived the slide... and only five made it out. Now we took an oath, that I'm breaking now. We said we'd say it was the snow that killed the other two, but it wasn't. Nature is lethal but it doesn't hold a candle to man.", "You see? It's curious. Ted did figure it out - time travel. And when we get back, we gonna tell everyone. How it's possible, how it's done, what the dangers are. But then why fifty years in the future when the spacecraft encounters a black hole does the computer call it an 'unknown entry event'? Why don't they know? If they don't know, that means we never told anyone. And if we never told anyone it means we never made it back. Hence we die down here. Just as a matter of deductive logic.", "Like you, I used to think the world was this great place where everybody lived by the same standards I did, then some kid with a nail showed me I was living in his world, a world where chaos rules not order, a world where righteousness is not rewarded. That's Cesar's world, and if you're not willing to play by his rules, then you're gonna have to pay the price.", "You think water moves fast? You should see ice. It moves like it has a mind. Like it knows it killed the world once and got a taste for murder. After the avalanche, it took us a week to climb out. Now, I don't know exactly when we turned on each other, but I know that seven of us survived the slide... and only five made it out. Now we took an oath, that I'm breaking now. We said we'd say it was the snow that killed the other two, but it wasn't. Nature is lethal but it doesn't hold a candle to man."];
+    <script type="text/javascript" src="/webdesk/vcXMLRPC.js"></script>
+    <body>
+        <div class="p-5">
+            <h2>Agendamento SSS</h2>
+            <div class="card">
+              <div class="card-body p-0">
+                <div id="calendar"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- calendar modal -->
+          <div id="modal-view-event" class="modal modal-top fade calendar-modal">
+                  <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-body">
+                              <h4 class="modal-title"><span class="event-icon"></span><span class="event-title"></span></h4>
+                              <div class="event-body"></div>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          
+          <div id="modal-view-event-add" class="modal modal-top fade calendar-modal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <form id="add-event">
+                  <div class="modal-body">
+                  <h4>Detalhes do Evento</h4>        
+                    <div class="form-group">
+                      <label>Nome do Evento</label>
+                      <input type="text" class="form-control" name="ename">
+                    </div>
+                    <div class="form-group">
+                      <label>Data do Evento</label>
+                      <input type='text' class="datetimepicker form-control" name="edate">
+                    </div>        
+                    <div class="form-group">
+                      <label>Descrição do Evento</label>
+                      <textarea class="form-control" name="edesc"></textarea>
+                    </div>       
+                </div>
+                  <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" >Salvar</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>        
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+    </body>
 
-  for(i = 0; i < 500; i++) {
-    j = Math.max(i % 15 - 10, 0);
-    //c and c1 jump around to provide an illusion of random data
-    c = (c * 1063) % 1061; 
-    c1 = (c1 * 3329) % 3331;
-    d = (d1 + c + c1) % 839 - 440;
-    h = i % 36;
-    m = (i % 4) * 15;
-    if (h < 18) { h = 0; m = 0; } else { h = Math.max(h - 24, 0) + 8; }
-    end = !j ? null : new Date(y, m, d + j, h + 2, m);
-    data.push({ title: names[c1 % names.length], start: new Date(y, m, d, h, m), end: end, allDay: !(i % 6), text: slipsum[c % slipsum.length ]  });
-  }
-  
-  data.sort(function(a,b) { return (+a.start) - (+b.start); });
-  
-//data must be sorted by start date
-
-//Actually do everything
-$('#holder').calendar({
-  data: data
-});
-</script>
-
-
+<!-- CSS Completo -->
 <style>
-.slotfull .layout-1-1{
-  display: none;
+ .fc {
+  direction: ltr;
+  text-align: left; }
+
+.fc-rtl {
+  text-align: right; }
+
+body .fc {
+  /* extra precedence to overcome jqui */
+  font-size: 1em; 
+  background-color: #c0c0c0;
+  }
+
+/* Colors
+--------------------------------------------------------------------------------------------------*/
+.fc-highlight {
+  /* when user is selecting cells */
+  background: #bce8f1;
+  opacity: .3; }
+
+.fc-bgevent {
+  /* default look for background events */
+  background: #8fdf82;
+  opacity: .3; }
+
+.fc-nonbusiness {
+  /* default look for non-business-hours areas */
+  /* will inherit .fc-bgevent's styles */
+  background: rgba(52,40,104,.05); }
+
+/* Buttons (styled <button> tags, normalized to work cross-browser)
+--------------------------------------------------------------------------------------------------*/
+.fc button {
+  /* force height to include the border and padding */
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  /* dimensions */
+  margin: 0;
+  height: auto;
+  padding: 0 .6em;
+  /* text & cursor */
+  font-size: 1em;
+  /* normalize */
+  white-space: nowrap;
+  cursor: pointer; }
+
+/* Firefox has an annoying inner border */
+.fc button::-moz-focus-inner {
+  margin: 0;
+  padding: 0; }
+
+.fc-state-default {
+  /* non-theme */
+  border: 1px solid; }
+
+.fc-state-default.fc-corner-left {
+  /* non-theme */
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px; }
+
+.fc-state-default.fc-corner-right {
+  /* non-theme */
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px; }
+
+/* icons in buttons */
+.fc button .fc-icon {
+  /* non-theme */
+  position: relative;
+  top: -0.05em;
+  /* seems to be a good adjustment across browsers */
+  margin: 0 .2em;
+  vertical-align: middle; }
+
+/*
+  button states
+  borrowed from twitter bootstrap (http://twitter.github.com/bootstrap/)
+*/
+.fc-state-default {
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  color: #333;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); }
+
+.fc-state-hover,
+.fc-state-down,
+.fc-state-active,
+.fc-state-disabled {
+  color: #333333;
+  background-color: #e6e6e6; }
+
+.fc-state-hover {
+  color: #333333;
+  text-decoration: none;
+  background-position: 0 -15px;
+  -webkit-transition: background-position 0.1s linear;
+  -moz-transition: background-position 0.1s linear;
+  -o-transition: background-position 0.1s linear;
+  transition: background-position 0.1s linear; }
+
+.fc-state-down,
+.fc-state-active {
+  background-color: #cccccc;
+  background-image: none;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }
+
+.fc-state-disabled {
+  cursor: default;
+  background-image: none;
+  opacity: 0.65;
+  box-shadow: none; }
+
+/* Buttons Groups
+--------------------------------------------------------------------------------------------------*/
+.fc-button-group {
+  display: inline-block; }
+
+/*
+every button that is not first in a button group should scootch over one pixel and cover the
+previous button's border...
+*/
+.fc .fc-button-group > * {
+  /* extra precedence b/c buttons have margin set to zero */
+  float: left;
+  margin: 0 0 0 -1px; }
+
+.fc .fc-button-group > :first-child {
+  /* same */
+  margin-left: 0; }
+
+/* Popover
+--------------------------------------------------------------------------------------------------*/
+.fc-popover {
+  position: absolute;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+
+.fc-popover .fc-header {
+  /* TODO: be more consistent with fc-head/fc-body */
+  padding: 1px 2px; }
+
+.fc-popover .fc-header .fc-title {
+  margin: 0 2px; }
+
+.fc-popover .fc-header .fc-close {
+  cursor: pointer; }
+
+.fc-ltr .fc-popover .fc-header .fc-title,
+.fc-rtl .fc-popover .fc-header .fc-close {
+  float: left; }
+
+.fc-rtl .fc-popover .fc-header .fc-title,
+.fc-ltr .fc-popover .fc-header .fc-close {
+  float: right; }
+
+/* Misc Reusable Components
+--------------------------------------------------------------------------------------------------*/
+.fc-divider {
+  border-style: solid;
+  border-width: 1px; }
+
+hr.fc-divider {
+  height: 0;
+  margin: 0;
+  padding: 0 0 2px;
+  /* height is unreliable across browsers, so use padding */
+  border-width: 1px 0; }
+
+.fc-clear {
+  clear: both; }
+
+.fc-bg,
+.fc-bgevent-skeleton,
+.fc-highlight-skeleton,
+.fc-helper-skeleton {
+  /* these element should always cling to top-left/right corners */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0; }
+
+.fc-bg {
+  bottom: 0;
+  /* strech bg to bottom edge */ }
+
+.fc-bg table {
+  height: 100%;
+  /* strech bg to bottom edge */ }
+
+/* Tables
+--------------------------------------------------------------------------------------------------*/
+.fc table {
+  width: 100%;
+  box-sizing: border-box;
+  /* fix scrollbar issue in firefox */
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 1em;
+  /* normalize cross-browser */ }
+
+.fc th {
+  text-align: center; }
+
+.fc th,
+.fc td {
+  border-style: solid;
+  border-width: 1px 1px 0 1px !important;
+  padding: 0;
+  border-color: #eee;
+  vertical-align: top;
 }
-.calendar-day {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-    height: 80px;
-  }
-  .calendar-table {
+
+.fc td.fc-today {
+  border-style: double;
+  /* overcome neighboring borders */ }
+
+/* Internal Nav Links
+--------------------------------------------------------------------------------------------------*/
+a[data-goto] {
+  cursor: pointer; }
+
+a[data-goto]:hover {
+  text-decoration: underline; }
+
+/* Fake Table Rows
+--------------------------------------------------------------------------------------------------*/
+.fc .fc-row {
+  /* extra precedence to overcome themes w/ .ui-widget-content forcing a 1px border */
+  /* no visible border by default. but make available if need be (scrollbar width compensation) */
+  border-style: solid;
+  border-width: 0; }
+
+.fc-row table {
+  /* don't put left/right border on anything within a fake row.
+     the outer tbody will worry about this */
+  border-left: 0 hidden transparent;
+  border-right: 0 hidden transparent;
+  /* no bottom borders on rows */
+  border-bottom: 0 hidden transparent; }
+
+.fc-row:first-child table {
+  border-top: 0 hidden transparent;
+  /* no top border on first row */ }
+
+/* Day Row (used within the header and the DayGrid)
+--------------------------------------------------------------------------------------------------*/
+.fc-row {
+  position: relative;
+  background: #ffffff;
+}
+
+.fc-row .fc-bg {
+  z-index: 1; }
+
+/* highlighting cells & background event skeleton */
+.fc-row .fc-bgevent-skeleton,
+.fc-row .fc-highlight-skeleton {
+  bottom: 0;
+  /* stretch skeleton to bottom of row */ }
+
+.fc-row .fc-bgevent-skeleton table,
+.fc-row .fc-highlight-skeleton table {
+  height: 100%;
+  /* stretch skeleton to bottom of row */ }
+
+.fc-row .fc-highlight-skeleton td,
+.fc-row .fc-bgevent-skeleton td {
+  border-color: transparent; }
+
+.fc-row .fc-bgevent-skeleton {
+  z-index: 2; }
+
+.fc-row .fc-highlight-skeleton {
+  z-index: 3; }
+
+/*
+row content (which contains day/week numbers and events) as well as "helper" (which contains
+temporary rendered events).
+*/
+.fc-row .fc-content-skeleton {
+  position: relative;
+  z-index: 4;
+  padding-bottom: 2px;
+  /* matches the space above the events */ }
+
+.fc-row .fc-helper-skeleton {
+  z-index: 5; }
+
+.fc .fc-row .fc-content-skeleton table,
+.fc .fc-row .fc-content-skeleton td,
+.fc .fc-row .fc-helper-skeleton td {
+  /* see-through to the background below */
+  /* extra precedence to prevent theme-provided backgrounds */
+  background: none;
+  /* in case <td>s are globally styled */
+  border-color: transparent;
+  padding: .5rem .5rem;
+}
+
+.fc-row .fc-content-skeleton td,
+.fc-row .fc-helper-skeleton td {
+  /* don't put a border between events and/or the day number */
+  border-bottom: 0; }
+
+.fc-row .fc-content-skeleton tbody td,
+.fc-row .fc-helper-skeleton tbody td {
+  /* don't put a border between event cells */
+  border-top: 0; }
+
+/* Scrolling Container
+--------------------------------------------------------------------------------------------------*/
+.fc-scroller {
+  -webkit-overflow-scrolling: touch; }
+
+/* TODO: move to agenda/basic */
+.fc-scroller > .fc-day-grid,
+.fc-scroller > .fc-time-grid {
+  position: relative;
+  /* re-scope all positions */
+  width: 100%;
+  /* hack to force re-sizing this inner element when scrollbars appear/disappear */ }
+
+/* Global Event Styles
+--------------------------------------------------------------------------------------------------*/
+.fc-event {
+  position: relative;
+  /* for resize handle and other inner positioning */
+  display: block;
+  /* make the <a> tag block */
+  font-size: 12px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  border-radius: 3px;
+  font-weight: 500;
+  border: 1px solid #ddd;
+  -webkit-box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.05);
+  /* default BORDER color */ }
+
+.fc-event,
+.fc-event-dot {
+  background-color: #ffffff;
+  color: #5d5386;
+  position: relative;
+  /* default BACKGROUND color */ }
+.fc-event:before,
+.fc-event-dot:before{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 50px;
+    height: 100%;
+    border-left: 3px solid #5d5386;
+    border-bottom: 3px solid #5d5386;
+    -webkit-border-radius: 3px 0px 0px 3px;
+    -moz-border-radius: 3px 0px 0px 3px;
+    border-radius: 3px 0px 0px 3px;
+}
+.fc-event .fc-title {
+    font-weight: 500;
+}
+.fc-event i{
+    font-size: 26px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+.fc-event,
+.fc-event:hover {
+  color: #fff;
+  /* default TEXT color */
+  text-decoration: none;
+  /* if <a> has an href */ }
+
+.fc-event[href],
+.fc-event.fc-draggable {
+  cursor: pointer;
+  /* give events with links and draggable events a hand mouse pointer */ }
+
+.fc-not-allowed,
+.fc-not-allowed .fc-event {
+  /* to override an event's custom cursor */
+  cursor: not-allowed; }
+
+.fc-event .fc-bg {
+  /* the generic .fc-bg already does position */
+  z-index: 1;
+  background: #fff;
+  opacity: .25; }
+
+.fc-event .fc-content {
+    color: #2c304d;
+    position: relative;
+    z-index: 2;
+    padding: 8px;
+}
+
+/* resizer (cursor AND touch devices) */
+.fc-event .fc-resizer {
+  position: absolute;
+  z-index: 4; }
+
+/* resizer (touch devices) */
+.fc-event .fc-resizer {
+  display: none; }
+
+.fc-event.fc-allow-mouse-resize .fc-resizer,
+.fc-event.fc-selected .fc-resizer {
+  /* only show when hovering or selected (with touch) */
+  display: block; }
+
+/* hit area */
+.fc-event.fc-selected .fc-resizer:before {
+  /* 40x40 touch area */
+  content: "";
+  position: absolute;
+  z-index: 9999;
+  /* user of this util can scope within a lower z-index */
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  margin-top: -20px; }
+
+/* Event Selection (only for touch devices)
+--------------------------------------------------------------------------------------------------*/
+.fc-event.fc-selected {
+  z-index: 9999 !important;
+  /* overcomes inline z-index */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+
+.fc-event.fc-selected.fc-dragging {
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3); }
+
+/* Horizontal Events
+--------------------------------------------------------------------------------------------------*/
+/* bigger touch area when selected */
+.fc-h-event.fc-selected:before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  /* below resizers */
+  top: -10px;
+  bottom: -10px;
+  left: 0;
+  right: 0; }
+
+/* events that are continuing to/from another week. kill rounded corners and butt up against edge */
+.fc-ltr .fc-h-event.fc-not-start,
+.fc-rtl .fc-h-event.fc-not-end {
+  margin-left: 0;
+  border-left-width: 0;
+  padding-left: 1px;
+  /* replace the border with padding */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0; }
+
+.fc-ltr .fc-h-event.fc-not-end,
+.fc-rtl .fc-h-event.fc-not-start {
+  margin-right: 0;
+  border-right-width: 0;
+  padding-right: 1px;
+  /* replace the border with padding */
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0; }
+
+/* resizer (cursor AND touch devices) */
+/* left resizer  */
+.fc-ltr .fc-h-event .fc-start-resizer,
+.fc-rtl .fc-h-event .fc-end-resizer {
+  cursor: w-resize;
+  left: -1px;
+  /* overcome border */ }
+
+/* right resizer */
+.fc-ltr .fc-h-event .fc-end-resizer,
+.fc-rtl .fc-h-event .fc-start-resizer {
+  cursor: e-resize;
+  right: -1px;
+  /* overcome border */ }
+
+/* resizer (mouse devices) */
+.fc-h-event.fc-allow-mouse-resize .fc-resizer {
+  width: 7px;
+  top: -1px;
+  /* overcome top border */
+  bottom: -1px;
+  /* overcome bottom border */ }
+
+/* resizer (touch devices) */
+.fc-h-event.fc-selected .fc-resizer {
+  /* 8x8 little dot */
+  border-radius: 4px;
+  border-width: 1px;
+  width: 6px;
+  height: 6px;
+  border-style: solid;
+  border-color: inherit;
+  background: #fff;
+  /* vertically center */
+  top: 50%;
+  margin-top: -4px; }
+
+/* left resizer  */
+.fc-ltr .fc-h-event.fc-selected .fc-start-resizer,
+.fc-rtl .fc-h-event.fc-selected .fc-end-resizer {
+  margin-left: -4px;
+  /* centers the 8x8 dot on the left edge */ }
+
+/* right resizer */
+.fc-ltr .fc-h-event.fc-selected .fc-end-resizer,
+.fc-rtl .fc-h-event.fc-selected .fc-start-resizer {
+  margin-right: -4px;
+  /* centers the 8x8 dot on the right edge */ }
+
+/* DayGrid events
+----------------------------------------------------------------------------------------------------
+We use the full "fc-day-grid-event" class instead of using descendants because the event won't
+be a descendant of the grid when it is being dragged.
+*/
+.fc-day-grid-event {
+  margin: 1px 2px 0;
+  /* spacing between events and edges */
+  padding: 0; }
+
+tr:first-child > td > .fc-day-grid-event {
+  margin-top: 2px;
+  /* a little bit more space before the first event */ }
+
+.fc-day-grid-event.fc-selected:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  /* same z-index as fc-bg, behind text */
+  /* overcome the borders */
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  /* darkening effect */
+  background: #000;
+  opacity: .25; }
+
+.fc-day-grid-event .fc-content {
+  /* force events to be one-line tall */
+  white-space: nowrap;
+  overflow: hidden; }
+
+.fc-day-grid-event .fc-time {
+  font-weight: bold; }
+
+/* resizer (cursor devices) */
+/* left resizer  */
+.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer,
+.fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer {
+  margin-left: -2px;
+  /* to the day cell's edge */ }
+
+/* right resizer */
+.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer,
+.fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer {
+  margin-right: -2px;
+  /* to the day cell's edge */ }
+
+/* Event Limiting
+--------------------------------------------------------------------------------------------------*/
+/* "more" link that represents hidden events */
+a.fc-more {
+  margin: 1px 3px;
+  font-size: .85em;
+  cursor: pointer;
+  text-decoration: none; }
+
+a.fc-more:hover {
+  text-decoration: underline; }
+
+.fc-limited {
+  /* rows and cells that are hidden because of a "more" link */
+  display: none; }
+
+/* popover that appears when "more" link is clicked */
+.fc-day-grid .fc-row {
+  z-index: 1;
+  /* make the "more" popover one higher than this */ }
+
+.fc-more-popover {
+  z-index: 2;
+  width: 220px; }
+
+.fc-more-popover .fc-event-container {
+  padding: 10px; }
+
+/* Now Indicator
+--------------------------------------------------------------------------------------------------*/
+.fc-now-indicator {
+  position: absolute;
+  border: 0 solid red; }
+
+/* Utilities
+--------------------------------------------------------------------------------------------------*/
+.fc-unselectable {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent; }
+
+/*
+TODO: more distinction between this file and common.css
+*/
+/* Colors
+--------------------------------------------------------------------------------------------------*/
+.fc-unthemed th,
+.fc-unthemed td,
+.fc-unthemed thead,
+.fc-unthemed tbody,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-row,
+.fc-unthemed .fc-content,
+.fc-unthemed .fc-popover,
+.fc-unthemed .fc-list-view,
+.fc-unthemed .fc-list-heading td {
+  border-color: #ddd; }
+
+.fc-unthemed .fc-popover {
+  background-color: #fff; }
+
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-popover .fc-header,
+.fc-unthemed .fc-list-heading td {
+  background: #eee; }
+
+.fc-unthemed .fc-popover .fc-header .fc-close {
+  color: #666; }
+
+.fc-unthemed td.fc-today {
+  background: #fcf8e3; }
+
+.fc-unthemed .fc-disabled-day {
+  background: #d7d7d7;
+  opacity: .3; }
+
+/* Icons (inline elements with styled text that mock arrow icons)
+--------------------------------------------------------------------------------------------------*/
+.fc-icon {
+  display: inline-block;
+  height: 1em;
+  line-height: 1em;
+  font-size: 1em;
+  text-align: center;
+  overflow: hidden;
+  font-family: "Courier New", Courier, monospace;
+  /* don't allow browser text-selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+/*
+Acceptable font-family overrides for individual icons:
+  "Arial", sans-serif
+  "Times New Roman", serif
+
+NOTE: use percentage font sizes or else old IE chokes
+*/
+.fc-icon:after {
+  position: relative; }
+
+.fc-icon-left-single-arrow:after {
+  content: "\2039";
+  font-weight: bold;
+  font-size: 200%;
+  top: -7%; }
+
+.fc-icon-right-single-arrow:after {
+  content: "\203A";
+  font-weight: bold;
+  font-size: 200%;
+  top: -7%; }
+
+.fc-icon-left-double-arrow:after {
+  content: "\AB";
+  font-size: 160%;
+  top: -7%; }
+
+.fc-icon-right-double-arrow:after {
+  content: "\BB";
+  font-size: 160%;
+  top: -7%; }
+
+.fc-icon-left-triangle:after {
+  content: "\25C4";
+  font-size: 125%;
+  top: 3%; }
+
+.fc-icon-right-triangle:after {
+  content: "\25BA";
+  font-size: 125%;
+  top: 3%; }
+
+.fc-icon-down-triangle:after {
+  content: "\25BC";
+  font-size: 125%;
+  top: 2%; }
+
+.fc-icon-x:after {
+  content: "\D7";
+  font-size: 200%;
+  top: 6%; }
+
+/* Popover
+--------------------------------------------------------------------------------------------------*/
+.fc-unthemed .fc-popover {
+  border-width: 1px;
+  border-style: solid; }
+
+.fc-unthemed .fc-popover .fc-header .fc-close {
+  font-size: .9em;
+  margin-top: 2px; }
+
+/* List View
+--------------------------------------------------------------------------------------------------*/
+.fc-unthemed .fc-list-item:hover td {
+  background-color: #f5f5f5; }
+
+/* Colors
+--------------------------------------------------------------------------------------------------*/
+.ui-widget .fc-disabled-day {
+  background-image: none; }
+
+/* Popover
+--------------------------------------------------------------------------------------------------*/
+.fc-popover > .ui-widget-header + .ui-widget-content {
+  border-top: 0;
+  /* where they meet, let the header have the border */ }
+
+/* Global Event Styles
+--------------------------------------------------------------------------------------------------*/
+.ui-widget .fc-event {
+  /* overpower jqui's styles on <a> tags. TODO: more DRY */
+  color: #fff;
+  /* default TEXT color */
+  text-decoration: none;
+  /* if <a> has an href */
+  /* undo ui-widget-header bold */
+  font-weight: normal; }
+
+/* TimeGrid axis running down the side (for both the all-day area and the slot area)
+--------------------------------------------------------------------------------------------------*/
+.ui-widget td.fc-axis {
+  font-weight: normal;
+  /* overcome bold */ }
+
+/* TimeGrid Slats (lines that run horizontally)
+--------------------------------------------------------------------------------------------------*/
+.fc-time-grid .fc-slats .ui-widget-content {
+  background: none;
+  /* see through to fc-bg */ }
+
+.fc.fc-bootstrap3 a {
+  text-decoration: none; }
+
+.fc.fc-bootstrap3 a[data-goto]:hover {
+  text-decoration: underline; }
+
+.fc-bootstrap3 hr.fc-divider {
+  border-color: inherit; }
+
+.fc-bootstrap3 .fc-today.alert {
+  border-radius: 0; }
+
+/* Popover
+--------------------------------------------------------------------------------------------------*/
+.fc-bootstrap3 .fc-popover .panel-body {
+  padding: 0; }
+
+/* TimeGrid Slats (lines that run horizontally)
+--------------------------------------------------------------------------------------------------*/
+.fc-bootstrap3 .fc-time-grid .fc-slats table {
+  /* some themes have background color. see through to slats */
+  background: none; }
+
+.fc.fc-bootstrap4 a {
+  text-decoration: none; }
+
+.fc.fc-bootstrap4 a[data-goto]:hover {
+  text-decoration: underline; }
+
+.fc-bootstrap4 hr.fc-divider {
+  border-color: inherit; }
+
+.fc-bootstrap4 .fc-today.alert {
+  border-radius: 0; }
+
+.fc-bootstrap4 a.fc-event:not([href]):not([tabindex]) {
+  color: #5d5386; }
+
+.fc-bootstrap4 .fc-popover.card {
+  position: absolute; }
+
+/* Popover
+--------------------------------------------------------------------------------------------------*/
+.fc-bootstrap4 .fc-popover .card-body {
+  padding: 0; }
+
+/* TimeGrid Slats (lines that run horizontally)
+--------------------------------------------------------------------------------------------------*/
+.fc-bootstrap4 .fc-time-grid .fc-slats table {
+  /* some themes have background color. see through to slats */
+  background: none; }
+
+/* Toolbar
+--------------------------------------------------------------------------------------------------*/
+.fc-toolbar {
+  text-align: center; }
+
+.fc-toolbar.fc-header-toolbar {
+  margin-bottom: 1em; }
+
+.fc-toolbar.fc-footer-toolbar {
+  margin-top: 1em; }
+
+.fc-toolbar .fc-left {
+  float: left; }
+
+.fc-toolbar .fc-right {
+  float: right; }
+
+.fc-toolbar .fc-center {
+  display: inline-block; }
+
+.fc button {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    height: auto;
+    padding: 0 1rem;
+    font-size: 1rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* the things within each left/right/center section */
+.fc .fc-toolbar > * > * {
+  /* extra precedence to override button border margins */
+  float: left;
+  margin-left: .75em; }
+
+/* the first thing within each left/center/right section */
+.fc .fc-toolbar > * > :first-child {
+  /* extra precedence to override button border margins */
+  margin-left: 0; }
+
+/* title text */
+.fc-toolbar h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* button layering (for border precedence) */
+.fc-toolbar button {
+  position: relative; }
+
+.fc-toolbar .fc-state-hover,
+.fc-toolbar .ui-state-hover {
+  z-index: 2; }
+
+.fc-toolbar .fc-state-down {
+  z-index: 3; }
+
+.fc-toolbar .fc-state-active,
+.fc-toolbar .ui-state-active {
+  z-index: 4; }
+
+.fc-toolbar button:focus {
+  z-index: 5; }
+
+/* View Structure
+--------------------------------------------------------------------------------------------------*/
+/* undo twitter bootstrap's box-sizing rules. normalizes positioning techniques */
+/* don't do this for the toolbar because we'll want bootstrap to style those buttons as some pt */
+.fc-view-container *,
+.fc-view-container *:before,
+.fc-view-container *:after {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; }
+
+.fc-view,
+.fc-view > table {
+  /* so dragged elements can be above the view's main element */
+  position: relative;
+  z-index: 1; }
+
+/* BasicView
+--------------------------------------------------------------------------------------------------*/
+/* day row structure */
+.fc-basicWeek-view .fc-content-skeleton,
+.fc-basicDay-view .fc-content-skeleton {
+  /* there may be week numbers in these views, so no padding-top */
+  padding-bottom: 1em;
+  /* ensure a space at bottom of cell for user selecting/clicking */ }
+
+/* a "rigid" row will take up a constant amount of height because content-skeleton is absolute */
+.fc-row.fc-rigid {
+  overflow: hidden; }
+
+.fc-row.fc-rigid .fc-content-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0; }
+
+/* week and day number styling */
+.fc-day-top.fc-other-month {
+  opacity: 0.3; }
+
+.fc-basic-view .fc-week-number,
+.fc-basic-view .fc-day-number {
+  padding: 2px;
+  color: rgba(52,40,104,.8);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.fc-basic-view th.fc-week-number,
+.fc-basic-view th.fc-day-number {
+  padding: 0 2px;
+  /* column headers can't have as much v space */ }
+
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
+  float: right; }
+
+.fc-rtl .fc-basic-view .fc-day-top .fc-day-number {
+  float: left; }
+
+.fc-ltr .fc-basic-view .fc-day-top .fc-week-number {
+  float: left;
+  border-radius: 0 0 3px 0; }
+
+.fc-rtl .fc-basic-view .fc-day-top .fc-week-number {
+  float: right;
+  border-radius: 0 0 0 3px; }
+
+.fc-basic-view .fc-day-top .fc-week-number {
+  min-width: 1.5em;
+  text-align: center;
+  background-color: #f2f2f2;
+  color: #808080; }
+
+/* when week/day number have own column */
+.fc-basic-view td.fc-week-number {
+  text-align: center; }
+
+.fc-basic-view td.fc-week-number > * {
+  /* work around the way we do column resizing and ensure a minimum width */
+  display: inline-block;
+  min-width: 1.25em; }
+
+/* AgendaView all-day area
+--------------------------------------------------------------------------------------------------*/
+.fc-agenda-view .fc-day-grid {
+  position: relative;
+  z-index: 2;
+  /* so the "more.." popover will be over the time grid */ }
+
+.fc-agenda-view .fc-day-grid .fc-row {
+  min-height: 3em;
+  /* all-day section will never get shorter than this */ }
+
+.fc-agenda-view .fc-day-grid .fc-row .fc-content-skeleton {
+  padding-bottom: 1em;
+  /* give space underneath events for clicking/selecting days */ }
+
+/* TimeGrid axis running down the side (for both the all-day area and the slot area)
+--------------------------------------------------------------------------------------------------*/
+.fc .fc-axis {
+  /* .fc to overcome default cell styles */
+  vertical-align: middle;
+  padding: 0 4px;
+  white-space: nowrap; }
+
+.fc-ltr .fc-axis {
+  text-align: right; }
+
+.fc-rtl .fc-axis {
+  text-align: left; }
+
+/* TimeGrid Structure
+--------------------------------------------------------------------------------------------------*/
+.fc-time-grid-container,
+.fc-time-grid {
+  /* so slats/bg/content/etc positions get scoped within here */
+  position: relative;
+  z-index: 1; }
+
+.fc-time-grid {
+  min-height: 100%;
+  /* so if height setting is 'auto', .fc-bg stretches to fill height */ }
+
+.fc-time-grid table {
+  /* don't put outer borders on slats/bg/content/etc */
+  border: 0 hidden transparent; }
+
+.fc-time-grid > .fc-bg {
+  z-index: 1;
+  background: #fff;
+}
+
+.fc-time-grid .fc-slats,
+.fc-time-grid > hr {
+  /* the <hr> AgendaView injects when grid is shorter than scroller */
+  position: relative;
+  z-index: 2; }
+
+.fc-time-grid .fc-content-col {
+  position: relative;
+  /* because now-indicator lives directly inside */ }
+
+.fc-time-grid .fc-content-skeleton {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  right: 0; }
+
+/* divs within a cell within the fc-content-skeleton */
+.fc-time-grid .fc-business-container {
+  position: relative;
+  z-index: 1; }
+
+.fc-time-grid .fc-bgevent-container {
+  position: relative;
+  z-index: 2; }
+
+.fc-time-grid .fc-highlight-container {
+  position: relative;
+  z-index: 3; }
+
+.fc-time-grid .fc-event-container {
+  position: relative;
+  z-index: 4; }
+
+.fc-time-grid .fc-now-indicator-line {
+  z-index: 5; }
+
+.fc-time-grid .fc-helper-container {
+  /* also is fc-event-container */
+  position: relative;
+  z-index: 6; }
+
+/* TimeGrid Slats (lines that run horizontally)
+--------------------------------------------------------------------------------------------------*/
+.fc-time-grid .fc-slats td {
+  height: 1.5em;
+  border-bottom: 0;
+  padding: 10px;
+  /* each cell is responsible for its top border */ }
+.fc-agendaDay-view .fc-time-grid .fc-slats td{
+  background: #ffffff;
+}
+.fc-time-grid .fc-slats .fc-minor td {
+  border-top-style: dotted; }
+
+/* TimeGrid Highlighting Slots
+--------------------------------------------------------------------------------------------------*/
+.fc-time-grid .fc-highlight-container {
+  /* a div within a cell within the fc-highlight-skeleton */
+  position: relative;
+  /* scopes the left/right of the fc-highlight to be in the column */ }
+
+.fc-time-grid .fc-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* top and bottom will be in by JS */ }
+
+/* TimeGrid Event Containment
+--------------------------------------------------------------------------------------------------*/
+.fc-ltr .fc-time-grid .fc-event-container {
+  /* space on the sides of events for LTR (default) */
+  margin: 0 2.5% 0 2px; }
+
+.fc-rtl .fc-time-grid .fc-event-container {
+  /* space on the sides of events for RTL */
+  margin: 0 2px 0 2.5%; }
+
+.fc-time-grid .fc-event,
+.fc-time-grid .fc-bgevent {
+  position: absolute;
+  z-index: 1;
+  /* scope inner z-index's */ }
+
+.fc-time-grid .fc-bgevent {
+  /* background events always span full width */
+  left: 0;
+  right: 0; }
+
+/* Generic Vertical Event
+--------------------------------------------------------------------------------------------------*/
+.fc-v-event.fc-not-start {
+  /* events that are continuing from another day */
+  /* replace space made by the top border with padding */
+  border-top-width: 0;
+  padding-top: 1px;
+  /* remove top rounded corners */
+  border-top-left-radius: 0;
+  border-top-right-radius: 0; }
+
+.fc-v-event.fc-not-end {
+  /* replace space made by the top border with padding */
+  border-bottom-width: 0;
+  padding-bottom: 1px;
+  /* remove bottom rounded corners */
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+/* TimeGrid Event Styling
+----------------------------------------------------------------------------------------------------
+We use the full "fc-time-grid-event" class instead of using descendants because the event won't
+be a descendant of the grid when it is being dragged.
+*/
+.fc-time-grid-event {
+  overflow: hidden;
+  /* don't let the bg flow over rounded corners */ }
+
+.fc-time-grid-event.fc-selected {
+  /* need to allow touch resizers to extend outside event's bounding box */
+  /* common fc-selected styles hide the fc-bg, so don't need this anyway */
+  overflow: visible; }
+
+.fc-time-grid-event.fc-selected .fc-bg {
+  display: none;
+  /* hide semi-white background, to appear darker */ }
+
+.fc-time-grid-event .fc-content {
+  overflow: hidden;
+  /* for when .fc-selected */ }
+
+.fc-time-grid-event .fc-time,
+.fc-time-grid-event .fc-title {
+  padding: 0 1px; }
+
+.fc-time-grid-event .fc-time {
+  font-size: .85em;
+  white-space: nowrap; }
+
+/* short mode, where time and title are on the same line */
+.fc-time-grid-event.fc-short .fc-content {
+  /* don't wrap to second line (now that contents will be inline) */
+  white-space: nowrap; }
+
+.fc-time-grid-event.fc-short .fc-time,
+.fc-time-grid-event.fc-short .fc-title {
+  /* put the time and title on the same line */
+  display: inline-block;
+  vertical-align: top; }
+
+.fc-time-grid-event.fc-short .fc-time span {
+  display: none;
+  /* don't display the full time text... */ }
+
+.fc-time-grid-event.fc-short .fc-time:before {
+  content: attr(data-start);
+  /* ...instead, display only the start time */ }
+
+.fc-time-grid-event.fc-short .fc-time:after {
+  content: "\A0-\A0";
+  /* seperate with a dash, wrapped in nbsp's */ }
+
+.fc-time-grid-event.fc-short .fc-title {
+  font-size: .85em;
+  /* make the title text the same size as the time */
+  padding: 0;
+  /* undo padding from above */ }
+
+/* resizer (cursor device) */
+.fc-time-grid-event.fc-allow-mouse-resize .fc-resizer {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  overflow: hidden;
+  line-height: 8px;
+  font-size: 11px;
+  font-family: monospace;
+  text-align: center;
+  cursor: s-resize; }
+
+.fc-time-grid-event.fc-allow-mouse-resize .fc-resizer:after {
+  content: "="; }
+
+/* resizer (touch device) */
+.fc-time-grid-event.fc-selected .fc-resizer {
+  /* 10x10 dot */
+  border-radius: 5px;
+  border-width: 1px;
+  width: 8px;
+  height: 8px;
+  border-style: solid;
+  border-color: inherit;
+  background: #fff;
+  /* horizontally center */
+  left: 50%;
+  margin-left: -5px;
+  /* center on the bottom edge */
+  bottom: -5px; }
+
+/* Now Indicator
+--------------------------------------------------------------------------------------------------*/
+.fc-time-grid .fc-now-indicator-line {
+  border-top-width: 1px;
+  left: 0;
+  right: 0; }
+
+/* arrow on axis */
+.fc-time-grid .fc-now-indicator-arrow {
+  margin-top: -5px;
+  /* vertically center on top coordinate */ }
+
+.fc-ltr .fc-time-grid .fc-now-indicator-arrow {
+  left: 0;
+  /* triangle pointing right... */
+  border-width: 5px 0 5px 6px;
+  border-top-color: transparent;
+  border-bottom-color: transparent; }
+
+.fc-rtl .fc-time-grid .fc-now-indicator-arrow {
+  right: 0;
+  /* triangle pointing left... */
+  border-width: 5px 6px 5px 0;
+  border-top-color: transparent;
+  border-bottom-color: transparent; }
+
+/* List View
+--------------------------------------------------------------------------------------------------*/
+/* possibly reusable */
+.fc-event-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px; }
+
+/* view wrapper */
+.fc-rtl .fc-list-view {
+  direction: rtl;
+  /* unlike core views, leverage browser RTL */ }
+
+.fc-list-view {
+  border-width: 1px;
+  border-style: solid; }
+
+/* table resets */
+.fc .fc-list-table {
+  table-layout: auto;
+  /* for shrinkwrapping cell content */ }
+
+.fc-list-table td {
+  border-width: 1px 0 0;
+  padding: 8px 14px; }
+
+.fc-list-table tr:first-child td {
+  border-top-width: 0; }
+
+/* day headings with the list */
+.fc-list-heading {
+  border-bottom-width: 1px; }
+
+.fc-list-heading td {
+  font-weight: bold; }
+
+.fc-ltr .fc-list-heading-main {
+  float: left; }
+
+.fc-ltr .fc-list-heading-alt {
+  float: right; }
+
+.fc-rtl .fc-list-heading-main {
+  float: right; }
+
+.fc-rtl .fc-list-heading-alt {
+  float: left; }
+
+/* event list items */
+.fc-list-item.fc-has-url {
+  cursor: pointer;
+  /* whole row will be clickable */ }
+
+.fc-list-item-marker,
+.fc-list-item-time {
+  white-space: nowrap;
+  width: 1px; }
+
+/* make the dot closer to the event title */
+.fc-ltr .fc-list-item-marker {
+  padding-right: 0; }
+
+.fc-rtl .fc-list-item-marker {
+  padding-left: 0; }
+
+.fc-list-item-title a {
+  /* every event title cell has an <a> tag */
+  text-decoration: none;
+  color: inherit; }
+
+.fc-list-item-title a[href]:hover {
+  /* hover effect only on titles with hrefs */
+  text-decoration: underline; }
+
+/* message when no events */
+.fc-list-empty-wrap2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+
+.fc-list-empty-wrap1 {
+  width: 100%;
+  height: 100%;
+  display: table; }
+
+.fc-list-empty {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center; }
+
+.fc-unthemed .fc-list-empty {
+  /* theme will provide own background */
+  background-color: #eee; }
+
+
+.fc th.fc-day-header{
+    padding: 11px 7px;
+    font-size: 16px;
+    font-weight: 400;
+}
+.fc-day.fc-today{
+    background: rgba(52,40,104,.03);
+}
+.fc-day.alert-info{
+    background: rgba(52,40,104,.03);
+}
+
+.datepicker{
+    z-index: 123456;
+}
+body{
+  font-family: 'Nunito', sans-serif;
+  background: #F3F5F9;
+}
+.card{
+  border: 0;
+  background: transparent;
+}
+h2{
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 22px;
+  text-align: center;
+  letter-spacing: 1px;
+  font-family: 'Montserrat', sans-serif;
+  color: #002147;
+  margin-bottom: 20px;
+}
+.btn{
+  font-size: 15px !important;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  font-family: 'Nunito', sans-serif;
+  box-shadow: none !important;
+  border: 0;
+  padding: 10px 20px !important;
+}
+.btn:focus{
+  box-shadow: none;
+}
+.btn.btn-primary{
+  background: #002147;
+  color: #ffffff;
+}
+.form-group label{
+  font-weight: 600;
+  letter-spacing: 0.010em;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.modal-body{
+  background: #F3F5F9;
+  border-radius: 10px;
+}
+.modal-body h4{
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 1px;
+  font-family: 'Montserrat', sans-serif;
+  color: #002147;
+  margin-bottom: 20px;
+}
+.modal-body .form-control{
+  box-shadow: none;
+  height: 50px;
+}
+
+
+/* related product */
+.related-product{
+    padding: 80px 0;
+}
+.related-product .container{
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+.related-product ul{
+  padding: 0;
+  margin: 0;
+}
+.related-product ul li{  
+    margin-bottom: 30px;
+  list-style-type: none;
+}
+.related-product ul li h3{
+    font-weight: 700;
+    font-size: 24px;
+    padding: 20px 0;
+}
+.related-product ul li a{
+    font-weight: 600;
+    color: #3b484a;
+    text-align: center;
+}
+.related-product ul li a img{
+  max-width: 100%;
+  display: block;
+}
+.related-box{
+    max-width: 400px;
     margin: 0 auto;
-    width: 700px;
-  }
-  .selected {
-    background-color: #eee;
-  }
-  .outside .date {
-    color: #ccc;
-  }
-  .timetitle {
-    white-space: nowrap;
-    text-align: right;
-  }
-  .event {
-    border-top: 1px solid #b2dba1;
-    border-bottom: 1px solid #b2dba1;
-    background-image: linear-gradient(to bottom, #dff0d8 0px, #c8e5bc 100%);
-    background-repeat: repeat-x;
-    color: #3c763d;
-    border-width: 1px;
-    font-size: .75em;
-    padding: 0 .75em;
-    line-height: 2em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 1px;
-  }
-  .event.begin {
-    border-left: 1px solid #b2dba1;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
-  .event.end {
-    border-right: 1px solid #b2dba1;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-  .event.all-day {
-    border-top: 1px solid #9acfea;
-    border-bottom: 1px solid #9acfea;
-    background-image: linear-gradient(to bottom, #d9edf7 0px, #b9def0 100%);
-    background-repeat: repeat-x;
-    color: #31708f;
-    border-width: 1px;
-  }
-  .event.all-day.begin {
-    border-left: 1px solid #9acfea;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
-  .event.all-day.end {
-    border-right: 1px solid #9acfea;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-  .event.clear {
-    background: none;
-    border: 1px solid transparent;
-  }
-  .table-tight > thead > tr > th,
-  .table-tight > tbody > tr > th,
-  .table-tight > tfoot > tr > th,
-  .table-tight > thead > tr > td,
-  .table-tight > tbody > tr > td,
-  .table-tight > tfoot > tr > td {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .table-tight-vert > thead > tr > th,
-  .table-tight-vert > tbody > tr > th,
-  .table-tight-vert > tfoot > tr > th,
-  .table-tight-vert > thead > tr > td,
-  .table-tight-vert > tbody > tr > td,
-  .table-tight-vert > tfoot > tr > td {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
+}
+.related-box.related-box-iframe{
+  max-width: 100%;
+}
+.download-btn{
+  padding: 15px;
+  display: inline-flex;
+  align-items: center;
+}
+.download-btn .fa{
+  font-size: 40px;
+  margin-right: 10px;
+}
 
-  #holder{
-    width: 100%;
-  }
- 
+.fc-day-grid-event {
+    height: 20px;
+}
 
-  </style>
-
-</form>
-</div>
-</body>	
-			<script type="text/javascript">
-            var datinha = FLUIGC.calendar('#datinha', {
-                    });
-            </script>		
-				 			 									
+</style>
+<#--  Fim do CSS  -->
 </html>
-
-
-
